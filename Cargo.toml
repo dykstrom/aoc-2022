@@ -9,6 +9,26 @@ name = "day01"
 [[bin]]
 name = "day02"
 
+[[bin]]
+name = "day03"
+
+[[bin]]
+name = "day04"
+
+[[bin]]
+name = "day05"
+
+[[bin]]
+name = "day06"
+
+[[bin]]
+name = "day07"
+
+[[bin]]
+name = "day08"
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+regex = "1.7.0"
+lazy_static = "1.4.0"

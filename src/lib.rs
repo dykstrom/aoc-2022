@@ -67,17 +67,34 @@ pub fn sum_rows(matrix: &Vec<Vec<i32>>) -> Vec<i32> {
 }
 
 /// Converts a matrix of string to a matrix of type i32.
-fn to_matrix_of_i32(matrix: &Vec<Vec<String>>) -> Vec<Vec<i32>> {
+pub fn to_matrix_of_i32(matrix: &Vec<Vec<String>>) -> Vec<Vec<i32>> {
     matrix.iter().map(to_vector_of_i32).collect()
 }
 
 /// Converts a vector of string to a vector of type i32.
-fn to_vector_of_i32(vec: &Vec<String>) -> Vec<i32> {
+pub fn to_vector_of_i32(vec: &Vec<String>) -> Vec<i32> {
     vec.iter().map(|s| to_i32(s)).collect::<Vec<i32>>()
 }
 
-fn to_i32(s: &str) -> i32 {
+pub fn to_i32(s: &str) -> i32 {
     s.trim().parse().expect(&*format!("Not an integer: {}", s))
+}
+
+pub fn to_i64(s: &str) -> i64 {
+    s.trim().parse().expect(&*format!("Not an integer: {}", s))
+}
+
+/// Converts a vector of String to a vector of &str.
+pub fn to_vector_of_str(vec: &Vec<String>) -> Vec<&str> {
+    vec.iter().map(|s| &s[..]).collect()
+}
+
+/// Splits the given vector into a vector of vector, where each sub vector has the given size.
+/// This function expects the number of items in 'v' to be evely dividable by 'size.
+pub fn split_into_groups<T>(v: Vec<T>, size: usize) -> Vec<Vec<T>>
+    where T: Clone
+{
+    v.chunks(size).map(|c| c.to_vec()).collect()
 }
 
 #[cfg(test)]
@@ -124,5 +141,18 @@ mod tests {
     fn test_can_sum_rows() {
         let result = sum_rows(&vec![vec![1, 2], vec![3], vec![0, 0, 4, 5, 6, 0, 0]]);
         assert_eq!(result, vec![3, 3, 15]);
+    }
+
+    #[test]
+    fn test_can_convert_vector_of_string() {
+        let vec = vec![String::from("foo"), String::from("bar")];
+        let result = to_vector_of_str(&vec);
+        assert_eq!(result, vec!["foo", "bar"]);
+    }
+
+    #[test]
+    fn test_can_split_into_groups() {
+        let result = split_into_groups(vec!["a", "b", "c", "d", "e", "f"], 3);
+        assert_eq!(result, vec![vec!["a", "b", "c"], vec!["d", "e", "f"]]);
     }
 }
