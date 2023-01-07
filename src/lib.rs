@@ -1,3 +1,5 @@
+pub mod geom;
+
 use std::fs;
 
 pub fn read_vector_of_string(path: &str) -> Vec<String> {

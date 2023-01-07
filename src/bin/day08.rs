@@ -1,5 +1,6 @@
 use std::collections::HashSet;
 use aoc_2022::{read_vector_of_string};
+use aoc_2022::geom::Point;
 
 const ZERO_AS_U8: u8 = '0' as u8;
 
@@ -17,25 +18,6 @@ fn to_vector_of_u8(row: &str) -> Vec<u8> {
     row.chars()
         .map(|c| c as u8 - ZERO_AS_U8)
         .collect()
-}
-
-#[derive(Debug, Eq, PartialEq, Clone, Hash)]
-pub struct Point {
-    x: i32,
-    y: i32,
-}
-
-impl Point {
-    /// Creates a new point from x and y.
-    pub fn of(x: i32, y: i32) -> Self {
-        Point { x, y }
-    }
-
-    /// Returns a new point that is the result of moving this point
-    /// in the direction defined by dx and dy.
-    pub fn updated(&self, dx: i32, dy: i32) -> Point {
-        Point::of(self.x + dx, self.y + dy)
-    }
 }
 
 /// Returns the height of the tree at 'pos', which is assumed to inside the forest.
@@ -58,7 +40,7 @@ pub fn find_visible_trees(forest: &Vec<Vec<u8>>, start: Point, dx: i32, dy: i32)
             visible_trees.push(pos.clone());
             height_of_highest_so_far = height;
         }
-        pos = pos.updated(dx, dy);
+        pos = pos.translate(dx, dy);
     }
 
     visible_trees
@@ -121,13 +103,13 @@ pub fn get_viewing_distance(forest: &Vec<Vec<u8>>, start: &Point, dx: i32, dy: i
 
     let mut count = 0;
 
-    let mut pos = start.updated(dx, dy);
+    let mut pos = start.translate(dx, dy);
     while is_in_forest(forest, &pos) {
         count += 1;
         if get_height(forest, &pos) >= my_height {
             break;
         }
-        pos = pos.updated(dx, dy);
+        pos = pos.translate(dx, dy);
     }
 
     count
@@ -179,12 +161,6 @@ mod tests {
 
         assert_eq!(is_in_forest(&forest, &Point::of(3, 0)), false);
         assert_eq!(is_in_forest(&forest, &Point::of(2, 3)), false);
-    }
-
-    #[test]
-    fn test_can_update_point() {
-        assert_eq!(Point::of(0, 0).updated(5, 3), Point::of(5, 3));
-        assert_eq!(Point::of(17, 47).updated(-2, 0), Point::of(15, 47));
     }
 
     #[test]
@@ -291,20 +267,6 @@ mod tests {
 
         assert_eq!(find_all_visible_trees(&forest), expected);
         assert_eq!(find_all_visible_trees(&forest).len(), 21);
-    }
-
-    #[test]
-    fn test_hash() {
-        let mut set: HashSet<Point> = HashSet::new();
-        set.insert(Point::of(0, 0));
-        set.insert(Point::of(1, 0));
-        set.insert(Point::of(0, 1));
-        set.insert(Point::of(1, 1));
-        set.insert(Point::of(0, 0));
-        set.insert(Point::of(1, 0));
-        set.insert(Point::of(0, 1));
-        set.insert(Point::of(1, 1));
-        assert_eq!(set.len(), 4);
     }
 
     #[test]
